@@ -1,5 +1,6 @@
 package com.oicapivara.gerenciadorprocessos.pessoa;
 
+import com.oicapivara.gerenciadorprocessos.pessoa.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,15 @@ public class PessoaController {
     @PostMapping("")
     public ResponseEntity<PessoaDTO> create(@RequestBody @Valid CreatePessoaDTO dto) {
         return new ResponseEntity<PessoaDTO>(pessoaService.create(dto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody AuthenticationDTO dto){
+        try{
+            return new ResponseEntity<>(new LoginResponseDTO(pessoaService.login(dto)),HttpStatus.OK);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GetMapping("{id}")
@@ -50,4 +60,8 @@ public class PessoaController {
         return new ResponseEntity<>(pessoaService.delete(id),HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/ping")
+    public ResponseEntity<String> ping(){
+        return new ResponseEntity<>("pong",HttpStatus.OK);
+    }
 }

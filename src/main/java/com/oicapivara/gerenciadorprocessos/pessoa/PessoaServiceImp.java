@@ -4,12 +4,19 @@ import com.oicapivara.gerenciadorprocessos.exceptions.EntityNotFoundException;
 import com.oicapivara.gerenciadorprocessos.exceptions.LawyerCreationException;
 import com.oicapivara.gerenciadorprocessos.exceptions.PasswordMatchesException;
 import com.oicapivara.gerenciadorprocessos.exceptions.UniqueFieldException;
+import com.oicapivara.gerenciadorprocessos.pessoa.dto.AuthenticationDTO;
+import com.oicapivara.gerenciadorprocessos.pessoa.dto.CreatePessoaDTO;
+import com.oicapivara.gerenciadorprocessos.pessoa.dto.PessoaDTO;
+import com.oicapivara.gerenciadorprocessos.pessoa.dto.UpdatePessoaDTO;
+import com.oicapivara.gerenciadorprocessos.pessoa.enums.PessoaRole;
+import com.oicapivara.gerenciadorprocessos.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,8 +25,20 @@ import java.util.Optional;
 public class PessoaServiceImp implements PessoaService{
 
     @Autowired
-    PessoaRepository pessoaRepository;
+    private PessoaRepository pessoaRepository;
+    @Autowired
+    private TokenService tokenService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
+
+    @Override
+    public String login(AuthenticationDTO authenticationDTO) {
+        var userAndPassword = new UsernamePasswordAuthenticationToken(authenticationDTO.getUsername(),authenticationDTO.getPassword());
+        var auth = authenticationManager.authenticate(userAndPassword);
+        var token = tokenService.generateToken((Pessoa) auth.getPrincipal());
+        return token;
+    }
 
     @Override
     public PessoaDTO create(CreatePessoaDTO dto) {
@@ -42,10 +61,9 @@ public class PessoaServiceImp implements PessoaService{
 
     @Override
     public PessoaDTO getByCpf(String cpf) {
-        Optional<Pessoa> pessoaOptional = pessoaRepository.findByCpf(cpf);
-        if (pessoaOptional.isEmpty()) throw new EntityNotFoundException("Pessoa nao encontrada para o cpf: " + cpf);
-        Pessoa pessoa = pessoaOptional.get();
-        return new PessoaDTO(pessoa);
+        Pessoa pessoaOptional = pessoaRepository.findByCpf(cpf);
+        if (pessoaOptional == null) throw new EntityNotFoundException("Pessoa nao encontrada para o cpf: " + cpf);
+        return new PessoaDTO(pessoaOptional);
     }
 
     @Override
