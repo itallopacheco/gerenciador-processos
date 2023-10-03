@@ -5,6 +5,10 @@ import com.oicapivara.gerenciadorprocessos.exceptions.LawyerCreationException;
 import com.oicapivara.gerenciadorprocessos.exceptions.PasswordMatchesException;
 import com.oicapivara.gerenciadorprocessos.exceptions.UniqueFieldException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -41,6 +45,29 @@ public class PessoaServiceImp implements PessoaService{
         if (pessoaOptional.isEmpty()) throw new EntityNotFoundException("Pessoa nao encontrada para o cpf: " + cpf);
         Pessoa pessoa = pessoaOptional.get();
         return new PessoaDTO(pessoa);
+    }
+
+    @Override
+    public Page<PessoaDTO> getAll() {
+        int page = 0;
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.Direction.ASC,
+                "name"
+        );
+        PageImpl<Pessoa> pessoaPage = new PageImpl<>(pessoaRepository.findAll(),pageRequest,size);
+        Page<PessoaDTO> pessoaDTOS = pessoaPage.map(pessoa -> new PessoaDTO(pessoa));
+        return pessoaDTOS;
+    }
+
+    @Override
+    public Page<PessoaDTO> search(String searchTerm, Integer page,Integer size) {
+        PageRequest pageRequest = PageRequest.of(page,size, Sort.Direction.ASC, "name");
+        Page<Pessoa> pessoaPage = pessoaRepository.search(searchTerm, pageRequest);
+        Page<PessoaDTO> pessoaDTOS = pessoaPage.map(pessoa -> new PessoaDTO(pessoa));
+        return pessoaDTOS;
     }
 
 
