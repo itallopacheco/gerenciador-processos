@@ -1,6 +1,5 @@
 package com.oicapivara.gerenciadorprocessos.pessoa;
 
-import com.oicapivara.gerenciadorprocessos.validation.ValidOAB;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@ValidOAB
 public class CreatePessoaDTO {
 
     @NotEmpty(message = "O nome é obrigatório.")
@@ -23,7 +21,6 @@ public class CreatePessoaDTO {
     @Pattern(regexp = "\\d{11}", message = "O CPF deve conter exatamente 11 dígitos")
     @CPF(message = "O CPF é inválido.")
     private String cpf;
-
 
     private String oab;
 
