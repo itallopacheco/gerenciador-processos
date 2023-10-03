@@ -1,5 +1,7 @@
-package com.oicapivara.gerenciadorprocessos.pessoa;
+package com.oicapivara.gerenciadorprocessos.pessoa.dto;
 
+import com.oicapivara.gerenciadorprocessos.pessoa.Pessoa;
+import com.oicapivara.gerenciadorprocessos.pessoa.enums.PessoaRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

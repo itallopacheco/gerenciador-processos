@@ -1,4 +1,4 @@
-package com.oicapivara.gerenciadorprocessos.pessoa;
+package com.oicapivara.gerenciadorprocessos.pessoa.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

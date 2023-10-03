@@ -1,4 +1,4 @@
-package com.oicapivara.gerenciadorprocessos.pessoa;
+package com.oicapivara.gerenciadorprocessos.pessoa.enums;
 
 public enum PessoaRole {
 
