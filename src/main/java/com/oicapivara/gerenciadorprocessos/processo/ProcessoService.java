@@ -8,6 +8,8 @@ public interface ProcessoService {
 
     ProcessoDTO create(CreateProcessoDTO dto);
 
+    ProcessoDTO getById(Long id);
+
 
 
 }

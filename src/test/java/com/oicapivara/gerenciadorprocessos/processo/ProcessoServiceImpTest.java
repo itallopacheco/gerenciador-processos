@@ -1,5 +1,7 @@
 package com.oicapivara.gerenciadorprocessos.processo;
 
+import com.oicapivara.gerenciadorprocessos.documentos.Documento;
+import com.oicapivara.gerenciadorprocessos.documentos.dto.DocumentoDTO;
 import com.oicapivara.gerenciadorprocessos.exceptions.EntityNotFoundException;
 import com.oicapivara.gerenciadorprocessos.exceptions.ProcessoCreationException;
 import com.oicapivara.gerenciadorprocessos.pessoa.Pessoa;
@@ -17,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +36,19 @@ class ProcessoServiceImpTest {
     private PessoaRepository pessoaRepository;
 
 
+    private List<Documento> documentos = new ArrayList<>();
+    private List<DocumentoDTO> documentoDTOS = new ArrayList<>();
     private Pessoa cliente;
     private Pessoa advogado;
     private CreateProcessoDTO createProcessoDTO;
     private ProcessoDTO processoDTO;
     private Processo processo;
+    private Processo processoCreated;
     private PessoaDTO clienteDTO;
     private PessoaDTO advogadoDTO;
+
+    private Documento documento;
+    private DocumentoDTO documentoDTO;
 
 
     @BeforeEach
@@ -50,7 +59,8 @@ class ProcessoServiceImpTest {
 
     @Test
     void testCreateProcessoSuccess(){
-        when(processoRepository.save(any(Processo.class))).thenReturn(processo);
+        when(processoRepository.save(any(Processo.class))).thenReturn(processoCreated);
+        when(pessoaRepository.existsById(anyLong())).thenReturn(true);
         when(pessoaRepository.findById(1L)).thenReturn(Optional.of(cliente));
         when(pessoaRepository.findById(2L)).thenReturn(Optional.of(advogado));
 
@@ -89,7 +99,6 @@ class ProcessoServiceImpTest {
             assertEquals("Responsável não encontrado para o id: 2",e.getMessage());
         }
     }
-
     @Test
     void testCreateProcessoWithoutPessoas(){
         when(pessoaRepository.existsById(anyLong())).thenReturn(false);
@@ -99,10 +108,9 @@ class ProcessoServiceImpTest {
         } catch (Exception e){
             assertEquals(EntityNotFoundException.class,e.getClass());
             assertEquals("Parte não encontrada para o id: 1\n" +
-                    "Responsável não encontrado para id: 2",e.getMessage());
+                    "Responsável não encontrado para o id: 2",e.getMessage());
         }
     }
-
     @Test
     void testCreateProcessoWithResponsavelNotAdvogado(){
         when(pessoaRepository.existsById(anyLong())).thenReturn(true);
@@ -117,16 +125,31 @@ class ProcessoServiceImpTest {
         }
     }
 
-
+    @Test
+    void testGetProcessoByIdSuccess(){
+        when(processoRepository.findById(anyLong())).thenReturn(Optional.of(processo));
+        ProcessoDTO response = processoService.getById(1L);
+        assertEquals(ProcessoDTO.class,response.getClass());
+        assertEquals("123456",response.getNumeroProcesso());
+        assertEquals(1,response.getDocumentos().size());
+    }
 
     private void startProcessos(){
         createProcessoDTO = new CreateProcessoDTO("123456",1L,2L,"Divorcio",500.6);
-        processo = new Processo(1L,"123456",cliente,advogado,"Doc","Tema",500.6);
-        processoDTO = new ProcessoDTO(1L,"123456",clienteDTO,advogadoDTO,"Doc","Tema",500.6);
         cliente = new Pessoa(1L,"Itallo","86206644502",null,"senha123", List.of(PessoaRole.CLIENTE));
         advogado = new Pessoa(2L,"Itallo","86206644502","123456","senha123",List.of(PessoaRole.ADVOGADO));
         clienteDTO = new PessoaDTO(cliente);
         advogadoDTO = new PessoaDTO(advogado);
+
+        processo = new Processo(1L,"123456",cliente,advogado,documentos,"Tema",500.6);
+        processoDTO = new ProcessoDTO(1L,"123456",clienteDTO,advogadoDTO,documentoDTOS,"Tema",500.6);
+
+        documento = new Documento(1L,"Documento Teste","caminho/documento.pdf","pdf",processo);
+        documentoDTO = new DocumentoDTO(documento);
+        documentos.add(documento);
+        documentoDTOS.add(documentoDTO);
+
+        processoCreated = new Processo(1L,"123456",cliente,advogado,documentos,"Tema",500.6);
     }
 
 }

@@ -1,15 +1,19 @@
 package com.oicapivara.gerenciadorprocessos.processo;
 
+import com.oicapivara.gerenciadorprocessos.documentos.Documento;
+import com.oicapivara.gerenciadorprocessos.documentos.dto.DocumentoDTO;
 import com.oicapivara.gerenciadorprocessos.exceptions.EntityNotFoundException;
 import com.oicapivara.gerenciadorprocessos.exceptions.ProcessoCreationException;
 import com.oicapivara.gerenciadorprocessos.pessoa.Pessoa;
 import com.oicapivara.gerenciadorprocessos.pessoa.PessoaRepository;
+import com.oicapivara.gerenciadorprocessos.pessoa.dto.PessoaDTO;
 import com.oicapivara.gerenciadorprocessos.pessoa.enums.PessoaRole;
 import com.oicapivara.gerenciadorprocessos.processo.dto.CreateProcessoDTO;
 import com.oicapivara.gerenciadorprocessos.processo.dto.ProcessoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,10 +41,31 @@ public class ProcessoServiceImp implements ProcessoService{
         Processo processo = new Processo(dto.getNumeroProcesso(),parte,responsavel,dto.getTema(),dto.getValorCausa());
         processoRepository.save(processo);
 
-        ProcessoDTO response = new ProcessoDTO(processo);
+        ProcessoDTO response = new ProcessoDTO(
+                processo.getId()
+                ,processo.getNumeroProcesso()
+                , new PessoaDTO(processo.getParte())
+                , new PessoaDTO(processo.getResponsavel())
+                , processo.getDocumentos().stream().map(documento -> new DocumentoDTO(documento)).toList()
+                , processo.getTema()
+                , processo.getValorCausa()
+
+        );
 
         return response;
     }
+
+    @Override
+    public ProcessoDTO getById(Long id) {
+        Optional<Processo> processoOptional = processoRepository.findById(id);
+        if (processoOptional.isEmpty()) throw new EntityNotFoundException("Processo não encontrado para o id: "+id);
+
+        Processo processo = processoOptional.get();
+
+        ProcessoDTO response = new ProcessoDTO(processo);
+        return response;
+    }
+
     private void validatePessoasExist(CreateProcessoDTO dto) {
         Long parteId = dto.getParteId();
         Long responsavelId = dto.getResponsavelId();
