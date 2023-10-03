@@ -82,4 +82,16 @@ public class ResourceExceptionHandler {
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
+
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<StandardError> entityNotFound(EntityNotFoundException e, HttpServletRequest request){
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setError("Resource not found");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 }
