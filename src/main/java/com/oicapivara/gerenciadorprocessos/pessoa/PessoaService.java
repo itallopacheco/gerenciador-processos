@@ -15,4 +15,7 @@ public interface PessoaService {
 
     Page<PessoaDTO> search(String searchTerm, Integer page, Integer size);
 
+    PessoaDTO update (Long id, UpdatePessoaDTO dto);
+
+    Void delete (Long id);
 }

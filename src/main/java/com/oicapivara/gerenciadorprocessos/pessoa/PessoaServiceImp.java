@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -68,6 +69,29 @@ public class PessoaServiceImp implements PessoaService{
         Page<Pessoa> pessoaPage = pessoaRepository.search(searchTerm, pageRequest);
         Page<PessoaDTO> pessoaDTOS = pessoaPage.map(pessoa -> new PessoaDTO(pessoa));
         return pessoaDTOS;
+    }
+
+    @Override
+    public PessoaDTO update(Long id, UpdatePessoaDTO dto) {
+        Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
+        if (pessoaOptional.isEmpty()) throw new EntityNotFoundException("Pessoa não encontrada para o id: " + id);
+        Pessoa pessoa = pessoaOptional.get();
+
+        if (dto.getName() != null){
+            pessoa.setName(dto.getName());
+        }
+        pessoaRepository.save(pessoa);
+
+        return new PessoaDTO(pessoa);
+    }
+
+    @Override
+    public Void delete(Long id) {
+        Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
+        if (pessoaOptional.isEmpty()) throw new EntityNotFoundException("Pessoa não encontrada para id: "+id);
+        Pessoa pessoa = pessoaOptional.get();
+        pessoaRepository.delete(pessoa);
+        return null;
     }
 
 

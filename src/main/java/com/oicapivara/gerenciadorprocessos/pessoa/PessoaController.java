@@ -39,4 +39,15 @@ public class PessoaController {
         return new ResponseEntity<>(pessoaService.search(searchTerm, page, size), HttpStatus.OK);
 
     }
+
+    @PatchMapping("{id}")
+    public ResponseEntity<PessoaDTO> update(@PathVariable Long id, @RequestBody UpdatePessoaDTO dto){
+        return new ResponseEntity<>(pessoaService.update(id,dto),HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        return new ResponseEntity<>(pessoaService.delete(id),HttpStatus.NO_CONTENT);
+    }
+
 }
