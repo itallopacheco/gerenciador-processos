@@ -45,6 +45,7 @@ public class DocumentoServiceImp implements DocumentoService{
 
         String numProcesso = processo.getNumeroProcesso();
         String originalFilename = file.getOriginalFilename();
+        String filenameWithoutExtension = FilenameUtils.removeExtension(originalFilename);
         String fileExtension = FilenameUtils.getExtension(originalFilename);
         String uuid = UUID.randomUUID().toString();
 
@@ -54,7 +55,7 @@ public class DocumentoServiceImp implements DocumentoService{
         } catch (IOException e) {
             throw new RuntimeException("Não foi possível criar o diretório de destino"+ e);
         }
-        String destinationFilename = destinationDirectory + "/" + originalFilename + "_" + uuid + "." + fileExtension;
+        String destinationFilename = destinationDirectory + "/" + filenameWithoutExtension + "_" + uuid + "." + fileExtension;
 
         try {
             Files.copy(file.getInputStream(),
@@ -62,7 +63,7 @@ public class DocumentoServiceImp implements DocumentoService{
                     StandardCopyOption.REPLACE_EXISTING);
 
             Documento documento = documentoRepository.save(Documento.builder()
-                    .nome(file.getOriginalFilename())
+                    .nome(originalFilename)
                     .extensao(file.getContentType())
                     .processo(processo)
                     .caminho(destinationFilename).build()

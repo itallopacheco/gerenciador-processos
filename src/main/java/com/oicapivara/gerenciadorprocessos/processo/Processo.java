@@ -34,7 +34,7 @@ public class Processo {
     @JoinColumn(name = "responsavel_id")
     private Pessoa responsavel;
 
-    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Documento> documentos = new ArrayList<>();
 
     private String tema;
