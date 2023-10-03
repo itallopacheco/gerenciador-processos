@@ -3,6 +3,7 @@ package com.oicapivara.gerenciadorprocessos.documentos;
 import com.oicapivara.gerenciadorprocessos.processo.Processo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Documento {
 
     @Id
@@ -18,8 +20,8 @@ public class Documento {
     private Long id;
 
     private String nome;
-    private String caminho;
     private String extensao;
+    private String caminho;
 
     @ManyToOne
     @JoinColumn(name = "processo_id")
