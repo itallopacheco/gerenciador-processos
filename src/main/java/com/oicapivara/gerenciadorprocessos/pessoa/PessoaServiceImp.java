@@ -15,16 +15,34 @@ public class PessoaServiceImp implements PessoaService{
 
     @Override
     public PessoaDTO create(CreatePessoaDTO dto) {
-        if (! dto.getPassword().equals(dto.getPasswordConfirmation())) throw new PasswordMatchesException("As senhas não coincidem.");
-        if (dto.getRoleList().contains(PessoaRole.ADVOGADO) &&
-                ((dto.getOab() != null) && dto.getOab().isEmpty()) || (dto.getOab() == null)) {
-            throw new LawyerCreationException("O campo OAB é obrigatótio para criar um usuário do tipo Advogado.");
-        }
-        boolean cpfExists = pessoaRepository.existsByCpf(dto.getCpf());
-        if(cpfExists)throw new UniqueFieldException("cpf já cadastrado para o valor: " + dto.getCpf());
+        validatePasswordMatching(dto);
+        validateUniqueCpf(dto.getCpf());
+        validateOabForAdvogado(dto);
 
         Pessoa pessoa = dto.dtoToObject();
         pessoaRepository.save(pessoa);
         return new PessoaDTO(pessoa);
     }
+
+
+
+    private void validatePasswordMatching(CreatePessoaDTO dto) {
+        if (!dto.getPassword().equals(dto.getPasswordConfirmation())) {
+            throw new PasswordMatchesException("As senhas não coincidem.");
+        }
+    }
+    private void validateOabForAdvogado(CreatePessoaDTO dto) {
+        if (dto.getRoleList().contains(PessoaRole.ADVOGADO) && (dto.getOab() == null || dto.getOab().isEmpty())) {
+            throw new LawyerCreationException("O campo OAB é obrigatório para criar um usuário do tipo Advogado.");
+        }
+    }
+
+    private void validateUniqueCpf(String cpf) {
+        boolean cpfExists = pessoaRepository.existsByCpf(cpf);
+        if (cpfExists) {
+            throw new UniqueFieldException("CPF já cadastrado para o valor: " + cpf);
+        }
+    }
+
+
 }
