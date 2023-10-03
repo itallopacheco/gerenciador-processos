@@ -1,5 +1,7 @@
 package com.oicapivara.gerenciadorprocessos.processo;
 
+import com.oicapivara.gerenciadorprocessos.exceptions.EntityNotFoundException;
+import com.oicapivara.gerenciadorprocessos.exceptions.ProcessoCreationException;
 import com.oicapivara.gerenciadorprocessos.pessoa.Pessoa;
 import com.oicapivara.gerenciadorprocessos.pessoa.PessoaRepository;
 import com.oicapivara.gerenciadorprocessos.pessoa.PessoaServiceImp;
@@ -59,7 +61,61 @@ class ProcessoServiceImpTest {
         assertEquals(2L,result.getResponsavel().getId());
 
     }
+    @Test
+    void testCreateProcessoWithoutParte(){
+        when(pessoaRepository.existsById(1L)).thenReturn(false);
+        when(pessoaRepository.existsById(2L)).thenReturn(true);
+        when(pessoaRepository.findById(1L)).thenThrow(new EntityNotFoundException("Pessoa não encontrada para o id: "));
+        when(pessoaRepository.findById(2L)).thenReturn(Optional.of(advogado));
 
+        try{
+            processoService.create(createProcessoDTO);
+        } catch (Exception e){
+            assertEquals(EntityNotFoundException.class,e.getClass());
+            assertEquals("Pessoa não encontrada para o id: 1",e.getMessage());
+        }
+    }
+    @Test
+    void testCreateProcessoWithoutAdvogado(){
+        when(pessoaRepository.existsById(1L)).thenReturn(true);
+        when(pessoaRepository.existsById(2L)).thenReturn(false);
+        when(pessoaRepository.findById(2L)).thenThrow(new EntityNotFoundException("Responsável não encontrado para o id: "));
+        when(pessoaRepository.findById(1L)).thenReturn(Optional.of(cliente));
+
+        try{
+            processoService.create(createProcessoDTO);
+        } catch (Exception e){
+            assertEquals(EntityNotFoundException.class,e.getClass());
+            assertEquals("Responsável não encontrado para o id: 2",e.getMessage());
+        }
+    }
+
+    @Test
+    void testCreateProcessoWithoutPessoas(){
+        when(pessoaRepository.existsById(anyLong())).thenReturn(false);
+
+        try{
+            processoService.create(createProcessoDTO);
+        } catch (Exception e){
+            assertEquals(EntityNotFoundException.class,e.getClass());
+            assertEquals("Parte não encontrada para o id: 1\n" +
+                    "Responsável não encontrado para id: 2",e.getMessage());
+        }
+    }
+
+    @Test
+    void testCreateProcessoWithResponsavelNotAdvogado(){
+        when(pessoaRepository.existsById(anyLong())).thenReturn(true);
+        when(pessoaRepository.findById(1L)).thenReturn(Optional.of(cliente));
+        when(pessoaRepository.findById(2L)).thenReturn(Optional.of(advogado));
+        try{
+            createProcessoDTO.setResponsavelId(1L);
+            processoService.create(createProcessoDTO);
+        } catch (Exception e){
+            assertEquals(ProcessoCreationException.class, e.getClass());
+            assertEquals("O responsável não tem permissões de Advogado para o id: 1",e.getMessage());
+        }
+    }
 
 
 

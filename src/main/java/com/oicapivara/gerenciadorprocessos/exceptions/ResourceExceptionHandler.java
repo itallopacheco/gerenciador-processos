@@ -94,4 +94,15 @@ public class ResourceExceptionHandler {
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+    @ExceptionHandler(ProcessoCreationException.class)
+    public ResponseEntity<StandardError> processoCreationException(ProcessoCreationException e, HttpServletRequest request){
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setError("Erro ao criar um processo");
+        error.setMessage(e.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 }
