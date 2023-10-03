@@ -4,6 +4,9 @@ import com.oicapivara.gerenciadorprocessos.exceptions.EntityNotFoundException;
 import com.oicapivara.gerenciadorprocessos.exceptions.LawyerCreationException;
 import com.oicapivara.gerenciadorprocessos.exceptions.PasswordMatchesException;
 import com.oicapivara.gerenciadorprocessos.exceptions.UniqueFieldException;
+import com.oicapivara.gerenciadorprocessos.pessoa.dto.CreatePessoaDTO;
+import com.oicapivara.gerenciadorprocessos.pessoa.dto.PessoaDTO;
+import com.oicapivara.gerenciadorprocessos.pessoa.enums.PessoaRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -101,7 +104,7 @@ class PessoaServiceImpTest {
     @Test
     void testGetByCPFSuccess(){
 
-        when(pessoaRepository.findByCpf(anyString())).thenReturn(Optional.of(cliente));
+        when(pessoaRepository.findByCpf(anyString())).thenReturn(cliente);
         PessoaDTO result = pessoaService.getByCpf("86206644502");
         assertNotNull(result);
         assertEquals(PessoaDTO.class,result.getClass());
