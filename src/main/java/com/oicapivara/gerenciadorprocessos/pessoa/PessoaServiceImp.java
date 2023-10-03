@@ -1,10 +1,13 @@
 package com.oicapivara.gerenciadorprocessos.pessoa;
 
+import com.oicapivara.gerenciadorprocessos.exceptions.EntityNotFoundException;
 import com.oicapivara.gerenciadorprocessos.exceptions.LawyerCreationException;
 import com.oicapivara.gerenciadorprocessos.exceptions.PasswordMatchesException;
 import com.oicapivara.gerenciadorprocessos.exceptions.UniqueFieldException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PessoaServiceImp implements PessoaService{
@@ -24,6 +27,21 @@ public class PessoaServiceImp implements PessoaService{
         return new PessoaDTO(pessoa);
     }
 
+    @Override
+    public PessoaDTO getById(Long id) {
+        Optional<Pessoa> pessoaOptional = pessoaRepository.findById(id);
+        if (pessoaOptional.isEmpty()) throw new EntityNotFoundException("Pessoa nao encontrada para o id: " + id);
+        Pessoa pessoa = pessoaOptional.get();
+        return new PessoaDTO(pessoa);
+    }
+
+    @Override
+    public PessoaDTO getByCpf(String cpf) {
+        Optional<Pessoa> pessoaOptional = pessoaRepository.findByCpf(cpf);
+        if (pessoaOptional.isEmpty()) throw new EntityNotFoundException("Pessoa nao encontrada para o cpf: " + cpf);
+        Pessoa pessoa = pessoaOptional.get();
+        return new PessoaDTO(pessoa);
+    }
 
 
     private void validatePasswordMatching(CreatePessoaDTO dto) {
