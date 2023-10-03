@@ -40,6 +40,14 @@ public class Processo {
     private String tema;
     private double valorCausa;
 
+    public void addDocumento(Documento documento){
+        documentos.add(documento);
+    }
+
+    public void removeDocumento(Documento documento){
+        documentos.remove(documento);
+    }
+
     public Processo(String numeroProcesso, Pessoa parte, Pessoa responsavel, String tema, double valorCausa) {
         this.numeroProcesso = numeroProcesso;
         this.parte = parte;
