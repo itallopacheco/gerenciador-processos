@@ -52,6 +52,7 @@ public class ProcessoServiceImp implements ProcessoService{
                 , processo.getDocumentos().stream().map(documento -> new DocumentoDTO(documento)).toList()
                 , processo.getTema()
                 , processo.getValorCausa()
+                , processo.getAtivo()
 
         );
 

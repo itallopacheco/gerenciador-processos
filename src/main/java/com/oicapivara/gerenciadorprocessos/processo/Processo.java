@@ -40,6 +40,7 @@ public class Processo {
 
     private String tema;
     private double valorCausa;
+    private Boolean ativo;
 
     public void addDocumento(Documento documento){
         documentos.add(documento);
@@ -55,5 +56,6 @@ public class Processo {
         this.responsavel = responsavel;
         this.tema = tema;
         this.valorCausa = valorCausa;
+        this.ativo = true;
     }
 }

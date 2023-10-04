@@ -25,7 +25,7 @@ public class ProcessoDTO {
 
     private String tema;
     private Double valorCausa;
-
+    private Boolean ativo;
     public ProcessoDTO(Processo processo){
         List<DocumentoDTO> documentoDTOS = new ArrayList<>();
         for (Documento d:processo.getDocumentos()) {
@@ -40,6 +40,7 @@ public class ProcessoDTO {
         this.documentos = documentoDTOS;
         this.tema = processo.getTema();
         this.valorCausa = processo.getValorCausa();
+        this.ativo = processo.getAtivo();
     }
 
 }

@@ -141,15 +141,15 @@ class ProcessoServiceImpTest {
         clienteDTO = new PessoaDTO(cliente);
         advogadoDTO = new PessoaDTO(advogado);
 
-        processo = new Processo(1L,"123456",cliente,advogado,documentos,"Tema",500.6);
-        processoDTO = new ProcessoDTO(1L,"123456",clienteDTO,advogadoDTO,documentoDTOS,"Tema",500.6);
+        processo = new Processo(1L,"123456",cliente,advogado,documentos,"Tema",500.6,true);
+        processoDTO = new ProcessoDTO(1L,"123456",clienteDTO,advogadoDTO,documentoDTOS,"Tema",500.6,true);
 
         documento = new Documento(1L,"Documento Teste","caminho/documento.pdf","pdf",processo);
         documentoDTO = new DocumentoDTO(documento);
         documentos.add(documento);
         documentoDTOS.add(documentoDTO);
 
-        processoCreated = new Processo(1L,"123456",cliente,advogado,documentos,"Tema",500.6);
+        processoCreated = new Processo(1L,"123456",cliente,advogado,documentos,"Tema",500.6,true);
     }
 
 }
