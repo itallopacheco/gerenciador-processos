@@ -16,10 +16,12 @@ public class DocumentoDTO {
     private Long id;
 
     private String nome;
-    private String caminho;
     private String extensao;
-    private Long processoId;
+    private String caminho;
     private Boolean ativo;
+
+    private Long proprietarioId;
+    private Long processoId;
 
     public DocumentoDTO(Documento documento){
         this.id = documento.getId();
@@ -28,6 +30,7 @@ public class DocumentoDTO {
         this.processoId = documento.getProcesso().getId();
         this.caminho = documento.getCaminho();
         this.ativo = documento.getAtivo();
+        this.proprietarioId = documento.getProprietario().getId();
     }
 
 }

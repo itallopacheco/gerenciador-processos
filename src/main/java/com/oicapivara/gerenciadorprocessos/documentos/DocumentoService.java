@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface DocumentoService {
 
 
-    String create(Long id, MultipartFile multipartFile);
+    String create(Long id, MultipartFile multipartFile, Long userId);
 
     Resource getById(Long id);
 

@@ -1,5 +1,6 @@
 package com.oicapivara.gerenciadorprocessos.documentos;
 
+import com.oicapivara.gerenciadorprocessos.pessoa.Pessoa;
 import com.oicapivara.gerenciadorprocessos.processo.Processo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,10 @@ public class Documento {
     private String extensao;
     private String caminho;
     private Boolean ativo;
+
+    @ManyToOne
+    @JoinColumn(name = "proprietario_id")
+    private Pessoa proprietario;
 
     @ManyToOne
     @JoinColumn(name = "processo_id")

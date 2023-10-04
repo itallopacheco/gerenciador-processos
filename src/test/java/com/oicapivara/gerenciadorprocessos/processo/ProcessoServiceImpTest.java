@@ -144,7 +144,7 @@ class ProcessoServiceImpTest {
         processo = new Processo(1L,"123456",cliente,advogado,documentos,"Tema",500.6,true);
         processoDTO = new ProcessoDTO(1L,"123456",clienteDTO,advogadoDTO,documentoDTOS,"Tema",500.6,true);
 
-        documento = new Documento(1L,"Documento Teste","caminho/documento.pdf","pdf",true,processo);
+        documento = new Documento(1L,"Documento Teste","pdf","caminho/documento.pdf",true,advogado,processo);
         documentoDTO = new DocumentoDTO(documento);
         documentos.add(documento);
         documentoDTOS.add(documentoDTO);
