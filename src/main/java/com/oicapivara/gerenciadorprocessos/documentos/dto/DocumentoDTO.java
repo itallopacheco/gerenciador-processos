@@ -26,6 +26,7 @@ public class DocumentoDTO {
         this.nome = documento.getNome();
         this.extensao = documento.getExtensao();
         this.processoId = documento.getProcesso().getId();
+        this.caminho = documento.getCaminho();
     }
 
 }
