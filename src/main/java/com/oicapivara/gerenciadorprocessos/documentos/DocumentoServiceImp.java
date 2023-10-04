@@ -10,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.print.Doc;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -39,7 +41,7 @@ public class DocumentoServiceImp implements DocumentoService{
 
 
     @Override
-    public String upload(Long id, MultipartFile file) {
+    public String create(Long id, MultipartFile file) {
         Optional<Processo> processoOptional = processoRepository.findById(id);
         Processo processo = processoOptional.orElseThrow( () -> new EntityNotFoundException("Processo não encontrado para o id: "+id));
 
@@ -80,4 +82,22 @@ public class DocumentoServiceImp implements DocumentoService{
         return "documento enviado com sucesso " + destinationFilename;
 
     }
+
+    @Override
+    public Resource getById(Long id) {
+        Optional<Documento> documentoOptional = documentoRepository.findById(id);
+        if (documentoOptional.isEmpty()) throw new EntityNotFoundException("Documento não encontrado para o id:" +id);
+        Documento documento = documentoOptional.get();
+        Path pathToFile = Path.of(documento.getCaminho());
+        UrlResource resource = null;
+        try {
+            resource = new UrlResource(pathToFile.toUri());
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return resource;
+
+    }
+
+
 }
