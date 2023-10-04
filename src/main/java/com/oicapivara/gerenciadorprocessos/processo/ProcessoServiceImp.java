@@ -4,6 +4,7 @@ import com.oicapivara.gerenciadorprocessos.documentos.Documento;
 import com.oicapivara.gerenciadorprocessos.documentos.dto.DocumentoDTO;
 import com.oicapivara.gerenciadorprocessos.exceptions.EntityNotFoundException;
 import com.oicapivara.gerenciadorprocessos.exceptions.ProcessoCreationException;
+import com.oicapivara.gerenciadorprocessos.exceptions.UniqueFieldException;
 import com.oicapivara.gerenciadorprocessos.pessoa.Pessoa;
 import com.oicapivara.gerenciadorprocessos.pessoa.PessoaRepository;
 import com.oicapivara.gerenciadorprocessos.pessoa.dto.PessoaDTO;
@@ -28,6 +29,8 @@ public class ProcessoServiceImp implements ProcessoService{
 
     @Override
     public ProcessoDTO create(CreateProcessoDTO dto) {
+        Optional<Processo> processoOptional = processoRepository.findByNumeroProcesso(dto.getNumeroProcesso());
+        if (processoOptional.isPresent()) throw new UniqueFieldException("Processo já cadastrado para o número: " + dto.getNumeroProcesso());
         Long parteId = dto.getParteId();
         Long responsavelId = dto.getResponsavelId();
 
