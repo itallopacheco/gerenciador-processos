@@ -45,8 +45,17 @@ public class Pessoa implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.roles.contains(PessoaRole.ADMIN)) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
-                new SimpleGrantedAuthority("ROLE_USER"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+                new SimpleGrantedAuthority("ROLE_USER"),
+                new SimpleGrantedAuthority("ROLE_ADVOGADO"));
+        if (this.roles.contains(PessoaRole.ADVOGADO)) return List.of(
+               new SimpleGrantedAuthority("ROLE_ADVOGADO"),
+               new SimpleGrantedAuthority("ROLE_USER")
+        );
+       else {
+           return List.of(
+                   new SimpleGrantedAuthority("ROLE_USER")
+           );
+       }
     }
 
     @Override

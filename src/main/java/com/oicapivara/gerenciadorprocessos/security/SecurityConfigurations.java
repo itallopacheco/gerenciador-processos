@@ -29,6 +29,9 @@ public class SecurityConfigurations {
                .authorizeHttpRequests(authorize -> authorize
                        .requestMatchers(HttpMethod.POST,"/pessoa/login").permitAll()
                        .requestMatchers(HttpMethod.POST,"/pessoa").permitAll()
+                       .requestMatchers(HttpMethod.POST,"/processo").hasRole("ADVOGADO")
+                       .requestMatchers(HttpMethod.PATCH,"/processo").hasRole("ADVOGADO")
+                       .requestMatchers(HttpMethod.DELETE,"/processo").hasRole("ADVOGADO")
                        .anyRequest().authenticated()
                )
                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
