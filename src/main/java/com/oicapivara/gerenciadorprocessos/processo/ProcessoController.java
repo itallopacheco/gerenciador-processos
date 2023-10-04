@@ -31,4 +31,10 @@ public class ProcessoController {
         return new ResponseEntity<ProcessoDTO>(processoService.update(id,dto),HttpStatus.OK);
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        processoService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }

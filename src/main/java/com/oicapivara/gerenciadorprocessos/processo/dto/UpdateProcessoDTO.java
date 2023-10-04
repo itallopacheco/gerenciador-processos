@@ -11,5 +11,5 @@ public class UpdateProcessoDTO {
 
     private String tema;
     private Double valorCausa;
-
+    private Boolean ativo;
 }

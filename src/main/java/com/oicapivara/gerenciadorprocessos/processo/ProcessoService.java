@@ -13,5 +13,5 @@ public interface ProcessoService {
 
     ProcessoDTO update(Long  id, UpdateProcessoDTO dto);
 
-
+    void delete(Long id);
 }
