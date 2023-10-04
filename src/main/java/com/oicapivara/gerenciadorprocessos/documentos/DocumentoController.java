@@ -1,5 +1,7 @@
 package com.oicapivara.gerenciadorprocessos.documentos;
 
+import com.oicapivara.gerenciadorprocessos.documentos.dto.DocumentoDTO;
+import com.oicapivara.gerenciadorprocessos.documentos.dto.UpdateDocumentoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -29,4 +31,14 @@ public class DocumentoController {
         return ResponseEntity.ok().headers(headers).body(resource);
     }
 
+    @PatchMapping("{id}")
+    public ResponseEntity<DocumentoDTO> update(@PathVariable Long id, @RequestBody UpdateDocumentoDTO dto){
+        return new ResponseEntity<>(documentoService.update(id,dto),HttpStatus.OK);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        documentoService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

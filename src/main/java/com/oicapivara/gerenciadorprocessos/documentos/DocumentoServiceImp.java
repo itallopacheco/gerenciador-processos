@@ -1,5 +1,7 @@
 package com.oicapivara.gerenciadorprocessos.documentos;
 
+import com.oicapivara.gerenciadorprocessos.documentos.dto.DocumentoDTO;
+import com.oicapivara.gerenciadorprocessos.documentos.dto.UpdateDocumentoDTO;
 import com.oicapivara.gerenciadorprocessos.exceptions.EntityNotFoundException;
 import com.oicapivara.gerenciadorprocessos.processo.Processo;
 import com.oicapivara.gerenciadorprocessos.processo.ProcessoRepository;
@@ -68,7 +70,9 @@ public class DocumentoServiceImp implements DocumentoService{
                     .nome(originalFilename)
                     .extensao(file.getContentType())
                     .processo(processo)
-                    .caminho(destinationFilename).build()
+                    .caminho(destinationFilename)
+                    .ativo(true)
+                    .build()
             );
 
             processo.addDocumento(documento);
@@ -97,6 +101,29 @@ public class DocumentoServiceImp implements DocumentoService{
         }
         return resource;
 
+    }
+
+    @Override
+    public DocumentoDTO update(Long id, UpdateDocumentoDTO dto) {
+        Optional<Documento> documentoOptional = documentoRepository.findById(id);
+        if (documentoOptional.isEmpty()) throw new EntityNotFoundException("Documento não encontrado para o id:" +id);
+        Documento documento = documentoOptional.get();
+
+        if(dto.getAtivo() != null){
+            documento.setAtivo(dto.getAtivo());
+        }
+        documentoRepository.save(documento);
+        DocumentoDTO response = new DocumentoDTO(documento);
+        return response;
+    }
+
+    @Override
+    public void delete(Long id) {
+        Optional<Documento> documentoOptional = documentoRepository.findById(id);
+        if (documentoOptional.isEmpty()) throw new EntityNotFoundException("Documento não encontrado para o id:" +id);
+        Documento documento = documentoOptional.get();
+
+        documentoRepository.delete(documento);
     }
 
 

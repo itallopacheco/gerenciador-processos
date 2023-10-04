@@ -22,6 +22,7 @@ public class Documento {
     private String nome;
     private String extensao;
     private String caminho;
+    private Boolean ativo;
 
     @ManyToOne
     @JoinColumn(name = "processo_id")

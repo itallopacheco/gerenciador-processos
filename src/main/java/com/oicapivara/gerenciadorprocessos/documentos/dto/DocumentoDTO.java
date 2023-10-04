@@ -18,8 +18,8 @@ public class DocumentoDTO {
     private String nome;
     private String caminho;
     private String extensao;
-
     private Long processoId;
+    private Boolean ativo;
 
     public DocumentoDTO(Documento documento){
         this.id = documento.getId();
@@ -27,6 +27,7 @@ public class DocumentoDTO {
         this.extensao = documento.getExtensao();
         this.processoId = documento.getProcesso().getId();
         this.caminho = documento.getCaminho();
+        this.ativo = documento.getAtivo();
     }
 
 }
