@@ -2,6 +2,7 @@ package com.oicapivara.gerenciadorprocessos.processo;
 
 import com.oicapivara.gerenciadorprocessos.processo.dto.CreateProcessoDTO;
 import com.oicapivara.gerenciadorprocessos.processo.dto.ProcessoDTO;
+import com.oicapivara.gerenciadorprocessos.processo.dto.UpdateProcessoDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ public class ProcessoController {
         return new ResponseEntity<ProcessoDTO>(processoService.getById(id),HttpStatus.OK);
     }
 
-
+    @PatchMapping("{id}")
+    public ResponseEntity<ProcessoDTO> update(@PathVariable(name = "id")Long id, @RequestBody UpdateProcessoDTO dto){
+        return new ResponseEntity<ProcessoDTO>(processoService.update(id,dto),HttpStatus.OK);
+    }
 
 }

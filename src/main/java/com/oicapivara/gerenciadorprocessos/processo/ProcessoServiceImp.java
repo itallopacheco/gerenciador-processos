@@ -11,6 +11,7 @@ import com.oicapivara.gerenciadorprocessos.pessoa.dto.PessoaDTO;
 import com.oicapivara.gerenciadorprocessos.pessoa.enums.PessoaRole;
 import com.oicapivara.gerenciadorprocessos.processo.dto.CreateProcessoDTO;
 import com.oicapivara.gerenciadorprocessos.processo.dto.ProcessoDTO;
+import com.oicapivara.gerenciadorprocessos.processo.dto.UpdateProcessoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +69,22 @@ public class ProcessoServiceImp implements ProcessoService{
 
         ProcessoDTO response = new ProcessoDTO(processo);
         return response;
+    }
+
+    @Override
+    public ProcessoDTO update(Long id, UpdateProcessoDTO dto) {
+        Optional<Processo> processoOptional = processoRepository.findById(id);
+        if (processoOptional.isEmpty()) throw new EntityNotFoundException("Processo não encontrado para o id: "+id);
+
+        Processo processo = processoOptional.get();
+        if (dto.getTema() != null){
+            processo.setTema(dto.getTema());
+        }
+        if (dto.getValorCausa() != null){
+            processo.setValorCausa(dto.getValorCausa());
+        }
+        processoRepository.save(processo);
+        return new ProcessoDTO(processo);
     }
 
     private void validatePessoasExist(CreateProcessoDTO dto) {
