@@ -10,7 +10,7 @@ services:
     networks:
       - webapp
   api:
-    image: gerenciador-processos
+    image: oicapivara/gerenciador-processos:0.1
     hostname: api
     ports:
       - "8080:8080"
