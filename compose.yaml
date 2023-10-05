@@ -7,3 +7,17 @@ services:
       - 'POSTGRES_USER=postgres'
     ports:
       - '5438:5432'
+    networks:
+      - webapp
+  api:
+    image: gerenciador-processos
+    hostname: api
+    ports:
+      - "8080:8080"
+    networks:
+      - webapp
+    depends_on:
+      - postgres
+
+networks:
+  webapp:
